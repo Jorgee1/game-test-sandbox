@@ -7,15 +7,15 @@ Texture::Texture(){
     renderer = NULL;
 }
 
+Texture::~Texture(){
+    free();
+}
+
 Texture::Texture(SDL_Renderer* renderer){
     texture = NULL;
     h = 0;
     w = 0;
     this->renderer = renderer;
-}
-
-Texture::~Texture(){
-    free();
 }
 
 void Texture::free(){
@@ -32,7 +32,9 @@ void Texture::render(int x, int y){
     SDL_RenderCopy(renderer, texture, NULL, &renderQuad);
 }
 
-
+/*
+    Class for rendering text
+*/
 TextureText::TextureText(){
     font = NULL;
     text_size = 0;
@@ -95,4 +97,33 @@ void TextureText::render_text(int x, int y, string text){
     }else{
         printf("No texture to print\n");
     }
+}
+
+/*
+    Class for rendering blocks
+*/
+
+TextureBlock::TextureBlock(){
+    rect = {0, 0, 0, 0};
+    color = {0x00, 0x00, 0x00, 0x00};
+}
+TextureBlock::~TextureBlock(){
+    rect = {0, 0, 0, 0};
+    color = {0x00, 0x00, 0x00, 0x00};
+}
+
+TextureBlock::TextureBlock(SDL_Renderer* render, SDL_Color color, int x, int y, int h, int w){
+    SDL_Rect temp_rect = {x, y, w, h};
+    init(render, color, temp_rect);
+}
+
+void TextureBlock::init(SDL_Renderer* render, SDL_Color color, SDL_Rect rect){
+    renderer = render;
+    this->color = color;
+    this->rect = rect;
+}
+
+void TextureBlock::render(){
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawRect(renderer, &rect);
 }

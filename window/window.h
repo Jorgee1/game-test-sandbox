@@ -20,6 +20,7 @@ class Window{
         bool check_exit();
         void clear_screen();
         void update_screen();
+        void set_render_draw_color(SDL_Color);
 
         SDL_Renderer* get_render();
         SDL_Window* get_window();

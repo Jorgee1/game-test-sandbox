@@ -56,12 +56,17 @@ bool Window::check_exit(){
 }
 
 void Window::clear_screen(){
-    SDL_SetRenderDrawColor(render, clear_color.r, clear_color.g, clear_color.b, clear_color.a);
+    set_render_draw_color(clear_color);
     SDL_RenderClear(render);
 }
 
 void Window::update_screen(){
     SDL_RenderPresent(render);
+}
+
+
+void Window::set_render_draw_color(SDL_Color color){
+   SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a); 
 }
 
 SDL_Renderer* Window::get_render(){

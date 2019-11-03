@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 
+
 using namespace std;
 
 #ifndef TEXTURE_H
@@ -31,18 +32,25 @@ class TextureText: public Texture{
         int text_size; 
         string font_path;
 
-
         TextureText();
-
-        TextureText(const TextureText &);
-
         ~TextureText();
-
+        TextureText(const TextureText &);
         TextureText(SDL_Renderer*, string, SDL_Color, int);
 
         bool create_text_texture(string);
-
         void render_text(int, int, string);
+};
+
+class TextureBlock: public Texture{
+    public:
+        SDL_Rect rect;
+        SDL_Color color;
+
+        TextureBlock();
+        ~TextureBlock();
+        TextureBlock(SDL_Renderer*, SDL_Color, int, int, int, int);
+        void init(SDL_Renderer*, SDL_Color, SDL_Rect);
+        void render();
 };
 
 #endif
