@@ -37,6 +37,7 @@ class TextureText: public Texture{
         TextureText(const TextureText &);
         TextureText(SDL_Renderer*, string, SDL_Color, int);
 
+        void init(SDL_Renderer*, string, SDL_Color, int);
         bool create_text_texture(string);
         void render_text(int, int, string);
 };
@@ -51,6 +52,8 @@ class TextureBlock: public Texture{
         TextureBlock(SDL_Renderer*, SDL_Color, int, int, int, int);
         void init(SDL_Renderer*, SDL_Color, SDL_Rect);
         void render();
+        void render_fill();
+        void render_fill(int, int);
 };
 
 #endif

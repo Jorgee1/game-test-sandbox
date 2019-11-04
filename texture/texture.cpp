@@ -59,6 +59,10 @@ TextureText::~TextureText(){
 }
 
 TextureText::TextureText(SDL_Renderer* renderer, string path, SDL_Color color, int size){
+    init(renderer, path, color, size);
+}
+
+void TextureText::init(SDL_Renderer* renderer, string path, SDL_Color color, int size){
     this->renderer = renderer;
     this->color = color;
     
@@ -126,4 +130,16 @@ void TextureBlock::init(SDL_Renderer* render, SDL_Color color, SDL_Rect rect){
 void TextureBlock::render(){
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawRect(renderer, &rect);
+}
+void TextureBlock::render_fill(){
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(renderer, &rect);
+}
+
+void TextureBlock::render_fill(int offset_x, int offset_y){
+    SDL_Rect temp_rect = rect;
+    temp_rect.x += offset_x;
+    temp_rect.y += offset_y;
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(renderer, &temp_rect);
 }
