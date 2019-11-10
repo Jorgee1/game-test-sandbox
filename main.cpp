@@ -7,18 +7,11 @@
 #include <ctime>
 #include <map>
 
+#include "common.h"
 #include "texture.h"
 #include "window.h"
+#include "menu.h"
 
-struct controls{
-    int action_button;
-    int cancel_button;
-    int start_button;
-    int move_up;
-    int move_down;
-    int move_left;
-    int move_right;
-};
 
 
 class Entity{
@@ -91,13 +84,17 @@ class OverWorld{
     Window *window;
     vector<Entity*> actors;
     controls *control_rules;
+    TextureText text;
+    TextureBlock temp_block;
 
     int *view_selector;
 
-    const int PLAYER = 0;
+    int PLAYER = 0;
     const Uint8* key_state = SDL_GetKeyboardState(NULL);
     
     SDL_Rect camara = {(-800/2)+50, (-600/2)+50, 800, 600};
+
+    bool colition = false;
 
     bool enter_lock = true;
     int world_map[10][10] = {
@@ -123,9 +120,16 @@ class OverWorld{
         this->window = &window;
         this->control_rules = &control_rules;
         this->view_selector = &view_selector;
+        text.init(this->window->get_render(), "fonts/LiberationMono-Regular.ttf", {0x00, 0x00, 0x00, 0xFF}, 18);
+        temp_block.init(this->window->get_render(), {0xFF, 0xFF, 0xFF, 0xFF}, {0,0,0,0});
     }
 
-    void add_entity(Entity &actor, bool collition = true){
+    void add_player(Entity &actor){
+        PLAYER = actors.size();
+        actors.push_back(&actor);
+    }
+
+    void add_entity(Entity &actor){
         actors.push_back(&actor);
     }
 
@@ -153,16 +157,70 @@ class OverWorld{
     }
 
     void check_entity_colition(){
-        for(int i=1; i<actors.size(); i++){
-            if( box_collition(actors[PLAYER]->collition_box.rect, actors[i]->collition_box.rect)){
-                //printf("COLITION PLAYER x %i\n", i);
+        SDL_Rect box1 = actors[PLAYER]->collition_box.rect;
+        SDL_Rect box2;
+
+        box1 = {box1.x  + actors[PLAYER]->axis_speed.x, box1.y + actors[PLAYER]->axis_speed.y, box1.w, box1.h};
+
+        colition = false;
+
+        for(int i=0; i<actors.size(); i++){
+
+            if(PLAYER != i){
+            
+                box2 = actors[i]->collition_box.rect;
+
+                if(
+                    (box1.x + box1.w > box2.x)
+                                &&
+                    (box1.x < box2.x + box2.w)
+                                &&
+                    (box1.y + box1.h > box2.y)
+                                &&
+                    (box1.y < box2.y + box2.h)
+                ){
+                    colition = true;
+
+                    if(
+                        (box1.x + box1.w > box2.x)
+                                    &&
+                        (box1.x < box2.x + box2.w)
+                                    &&
+                        (actors[PLAYER]->collition_box.rect.y + box1.h > box2.y)
+                                    &&
+                        (actors[PLAYER]->collition_box.rect.y < box2.y + box2.h)
+                    ){
+                        if(actors[PLAYER]->axis_speed.x > 0){
+                            actors[PLAYER]->axis_speed.x = box2.x - actors[PLAYER]->collition_box.rect.x - actors[PLAYER]->collition_box.rect.w;
+                        }else if(actors[PLAYER]->axis_speed.x < 0){
+                            actors[PLAYER]->axis_speed.x = box2.x + box2.w - actors[PLAYER]->collition_box.rect.x;
+                        }
+                    }
+
+                    else if(
+                        (actors[PLAYER]->collition_box.rect.x + box1.w > box2.x)
+                                    &&
+                        (actors[PLAYER]->collition_box.rect.x < box2.x + box2.w)
+                                    &&
+                        (box1.y + box1.h > box2.y)
+                                    &&
+                        (box1.y < box2.y + box2.h)
+                    ){
+                        if(actors[PLAYER]->axis_speed.y > 0){
+                            actors[PLAYER]->axis_speed.y = box2.y - actors[PLAYER]->collition_box.rect.y - actors[PLAYER]->collition_box.rect.h;
+                        }else if(actors[PLAYER]->axis_speed.y < 0){
+                            actors[PLAYER]->axis_speed.y = box2.y + box2.h - actors[PLAYER]->collition_box.rect.y;
+                        }
+                    }
+                }
             }
+
         }
     }
 
     bool box_collition(SDL_Rect box1, SDL_Rect box2){
         if( 
-            (
+            ( 
                 range_colition(box1.x,  box1.w, box2.x,  box2.w)
             )
             &&
@@ -187,7 +245,8 @@ class OverWorld{
                 (
                     (x1 < x2 + d2) 
                     &&
-                    (x1 + d1 > x2 + d2))
+                    (x1 + d1 > x2 + d2)
+                )
             )
             ||
             ( 
@@ -215,7 +274,7 @@ class OverWorld{
             {0x00, 0x3D, 0x11, 0xFF},
             {0x60, 0x15, 0xFF, 0xFF},
         };
-        TextureBlock temp(window->get_render(), {0, 0, 0}, 0, 0, 100, 100);
+        TextureBlock temp(window->get_render(), {0xFF, 0, 0}, 0, 0, 100, 100);
         for(int i=0; i<10; i++){
             for(int j=0; j<10; j++){
                 temp.rect.x = j*100;
@@ -226,64 +285,65 @@ class OverWorld{
                 }
             }
         }
-
-
     }
 
-    void render(){
-        camara.y += actors[PLAYER]->axis_speed.y;
-        camara.x += actors[PLAYER]->axis_speed.x;
+    void update_actors_position(){
+        for(int i=0; i<actors.size(); i++){
+            actors[i]->update_position();
+        }
+    }
+
+    void update_camara(){
+        camara.x = actors[PLAYER]->collition_box.rect.x - (camara.w/2) + (actors[PLAYER]->collition_box.rect.w/2);
+        camara.y = actors[PLAYER]->collition_box.rect.y - (camara.h/2) + (actors[PLAYER]->collition_box.rect.h/2);
+    }
+
+    void render_actors(){
         for(int i=0; i<actors.size(); i++){
             if(box_collition(camara, actors[i]->collition_box.rect)){
-                actors[i]->update_position();
                 actors[i]->render(-camara.x, -camara.y);
             }
         }
     }
+
+
+    void render(){
+        
+        update_actors_position();
+        update_camara();
+
+        render_floor();
+        render_actors();
+
+
+
+        text.set_text_size("X:" + to_string(camara.x) + ", Y:" + to_string(camara.y));
+        temp_block.rect.x = 0;
+        temp_block.rect.y = 100;
+        temp_block.rect.h = text.h;
+        temp_block.rect.w = text.w;
+        temp_block.render_fill();
+        text.render(0, 100);
+
+
+        if(colition){
+            text.set_text_size("COLITION");
+            temp_block.rect.x = 0;
+            temp_block.rect.y = 0;
+            temp_block.rect.h = text.h;
+            temp_block.rect.w = text.w;
+            temp_block.render_fill();
+            text.render(0, 0);
+        }
+
+
+    }
 };
 
-class Menu{
-    public:
-        TextureText text;
-        Window *window;
-        const Uint8* key_state = SDL_GetKeyboardState(NULL);
-        int *view_selector;
-        controls *control_rules;
-        map<string, SDL_Color> *colors;
 
-        bool enter_lock = true;
 
-        Menu(){
-            window = NULL;
-            view_selector = NULL;
-            colors = NULL;
-        }
 
-        Menu(Window &window, controls &control_rules, map<string, SDL_Color> &colors_main,  int &view_selector){
-            this->window = &window;
-            this->control_rules = &control_rules;
-            this->view_selector = &view_selector;
-            colors = &colors_main;
-            text.init(this->window->get_render(), "fonts/LiberationMono-Regular.ttf", (*colors)["white"], 18);
-        }
-
-        void check_player_actions(){
-            if((key_state[control_rules->start_button]) && (!enter_lock)){
-                *view_selector=0;
-                enter_lock = true;
-            }
-
-            if(!key_state[control_rules->start_button]) {
-                enter_lock = false;
-            }
-        }
-
-        void render(){
-            text.render_text(0, 0, "ASDf");
-        }
-};
-
-int main(int argc, char* args[] ){
+int main(int argc, char* args[]){
     int view_selector = 0;
 
     map<string, SDL_Color> colors = {
@@ -305,17 +365,18 @@ int main(int argc, char* args[] ){
     };
 
     Window window("Test", 800, 600, colors["black"]);
+    window.set_icon("icon.bmp");
 
     Entity player(
         window.get_render(),
         colors["white"],
-        {0, 0, 100, 100},
+        {15, 15, 100, 100},
         10
     );
 
     Entity dummy(window.get_render(),
         colors["green"],
-        {320, 145, 200, 100},
+        {300, 140, 20, 100},
         10
     );
 
@@ -327,9 +388,10 @@ int main(int argc, char* args[] ){
     );
 
     OverWorld test_room(window, game_controls, view_selector);
-    test_room.add_entity(player);
     test_room.add_entity(dummy);
     test_room.add_entity(dummy2);
+
+    test_room.add_player(player);
 
     Menu menu_screen(window, game_controls, colors, view_selector);
 
@@ -343,13 +405,15 @@ int main(int argc, char* args[] ){
             if (view_selector == 0){
                 test_room.check_player_actions();
                 test_room.check_entity_colition();
-                test_room.render_floor();
                 test_room.render();
             }else if (view_selector == 1){
                 menu_screen.check_player_actions();
                 menu_screen.render();
             }
+
+            SDL_SetRenderDrawColor(window.get_render(),0x00, 0x00, 0xFF, 0xFF);
             window.update_screen();
+            //SDL_Delay(3000);
         }
     }
 

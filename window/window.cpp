@@ -69,6 +69,17 @@ void Window::set_render_draw_color(SDL_Color color){
    SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a); 
 }
 
+void Window::set_icon(string icon_path){
+    SDL_Surface* temp_surface = SDL_LoadBMP(icon_path.c_str());
+    if(temp_surface != NULL){
+        SDL_SetWindowIcon(window, temp_surface);
+        SDL_FreeSurface(temp_surface);
+    }else{
+        printf("ICON NOT FOUND\n");
+    }
+
+}
+
 SDL_Renderer* Window::get_render(){
     return render;
 }

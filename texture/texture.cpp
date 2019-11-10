@@ -36,25 +36,22 @@ void Texture::render(int x, int y){
     Class for rendering text
 */
 TextureText::TextureText(){
-    font = NULL;
-    text_size = 0;
-    color = {0,0,0};
+    for(int i=0; i<128; i++){
+        texture_chars[i] = NULL;
+    }
 }
 
 TextureText::TextureText(const TextureText &original){
     this->renderer = original.renderer;
-    font_path = original.font_path;
-    text_size = original.text_size;
-    color = original.color;
-    font = TTF_OpenFont(font_path.c_str(), text_size);
+    for(int i=0; i<128; i++){
+        texture_chars[i] = original.texture_chars[i];
+    }
 }
 
 TextureText::~TextureText(){
-    if(font != NULL){
-        TTF_CloseFont(font);
-        font = NULL;
-        text_size = 0;
-        color = {0,0,0};
+    for(int i=0; i<128; i++){
+        SDL_DestroyTexture(texture_chars[i]);
+        texture_chars[i] = NULL;
     }
 }
 
@@ -64,43 +61,82 @@ TextureText::TextureText(SDL_Renderer* renderer, string path, SDL_Color color, i
 
 void TextureText::init(SDL_Renderer* renderer, string path, SDL_Color color, int size){
     this->renderer = renderer;
-    this->color = color;
-    
-    font_path = path;
-    text_size = size;
 
-    font = TTF_OpenFont(font_path.c_str(), text_size);
+    TTF_Font* font = TTF_OpenFont(path.c_str(), size);
     if( font == NULL ){
         printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
     }
+
+    SDL_Surface* temp_surface = NULL;
+    for(int i=0; i<128; i++){
+        char x = (char)i;
+        char y[] = {x, '\0'};
+        
+        temp_surface = TTF_RenderText_Blended(font, y, color);
+        texture_chars[i] = SDL_CreateTextureFromSurface(renderer, temp_surface);
+        SDL_FreeSurface(temp_surface);
+        temp_surface = NULL;
+    }
+
+    TTF_CloseFont(font);
+    font=NULL;
 }
 
-bool TextureText::create_text_texture(string text){
-    free();
-    SDL_Surface* temp_surface = TTF_RenderText_Blended(font, text.c_str(), color);
-    if( temp_surface == NULL )
-    {
-        printf("Unable to create text! SDL_TTF Error: %s\n", TTF_GetError());
-        return false;
-    }else{
-        texture = SDL_CreateTextureFromSurface(renderer, temp_surface);
-        if( texture == NULL ){
-            printf( "Unable to create texture! SDL Error: %s\n", SDL_GetError() );
-            return false;
-        }else{
-            SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-            SDL_FreeSurface(temp_surface);
+void TextureText::set_text_size(string text){
+    int acc = 0;
+    int temp_character = 0;
+    int temp_w = 0;
+    for(int i=0, n=(int)strlen(text.c_str()); i<n; i++){
+        temp_character = (int)text.c_str()[i];
+        if (temp_character > 127){
+            temp_character = 63;
         }
+
+        SDL_QueryTexture(texture_chars[temp_character], NULL, NULL, &temp_w, &h);
+        acc += temp_w;
     }
-    return true;
+    w = acc;
+    target_text = text;
 }
 
-void TextureText::render_text(int x, int y, string text){
-    if (create_text_texture(text)){
-        render(x, y);
-    }else{
-        printf("No texture to print\n");
+void TextureText::render(int x, int y, string text){
+    int acc=0;
+    int temp_character = 0;
+    int temp_w = 0;
+    SDL_Rect temp_rect;
+
+    for(int i=0, n=(int)strlen(text.c_str()); i<n; i++){
+        temp_character = (int)text.c_str()[i];
+        if (temp_character > 127){
+            temp_character = 63;
+        }
+
+        SDL_QueryTexture(texture_chars[temp_character], NULL, NULL, &w, &h);
+        temp_rect = {acc, 0, w, h};
+        SDL_RenderCopy(renderer, texture_chars[temp_character], NULL, &temp_rect);
+        acc += w;
     }
+    w = acc;
+}
+
+void TextureText::render(int x, int y){
+    int acc=x;
+    int temp_character = 0;
+    int temp_w = 0;
+    SDL_Rect temp_rect;
+
+    for(int i=0, n=(int)strlen(target_text.c_str()); i<n; i++){
+        temp_character = (int)target_text.c_str()[i];
+        if (temp_character > 127){
+            temp_character = 63;
+        }
+
+        SDL_QueryTexture(texture_chars[temp_character], NULL, NULL, &w, &h);
+        temp_rect = {acc, y, w, h};
+        SDL_RenderCopy(renderer, texture_chars[temp_character], NULL, &temp_rect);
+        acc += w;
+    }
+    w = acc;
 }
 
 /*
@@ -109,11 +145,11 @@ void TextureText::render_text(int x, int y, string text){
 
 TextureBlock::TextureBlock(){
     rect = {0, 0, 0, 0};
-    color = {0x00, 0x00, 0x00, 0x00};
+    color = {0x00, 0x00, 0x00, 0xFF};
 }
 TextureBlock::~TextureBlock(){
     rect = {0, 0, 0, 0};
-    color = {0x00, 0x00, 0x00, 0x00};
+    color = {0x00, 0x00, 0x00, 0xFF};
 }
 
 TextureBlock::TextureBlock(SDL_Renderer* render, SDL_Color color, int x, int y, int h, int w){

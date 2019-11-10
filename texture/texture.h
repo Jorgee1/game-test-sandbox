@@ -19,7 +19,7 @@ class Texture{
 
         Texture();
         ~Texture();
-        Texture(SDL_Renderer*);
+        Texture(SDL_Renderer *);
         
         void free();
         void render(int, int);
@@ -27,19 +27,20 @@ class Texture{
 
 class TextureText: public Texture{
     public:
-        TTF_Font *font;
-        SDL_Color color;
-        int text_size; 
-        string font_path;
+        SDL_Texture* texture_chars[128];
+        string target_text;
+        int h, w;
 
         TextureText();
         ~TextureText();
         TextureText(const TextureText &);
         TextureText(SDL_Renderer*, string, SDL_Color, int);
 
+        void set_text_size(string);
+        void fill_array_null();
         void init(SDL_Renderer*, string, SDL_Color, int);
-        bool create_text_texture(string);
-        void render_text(int, int, string);
+        void render(int, int, string);
+        void render(int, int);
 };
 
 class TextureBlock: public Texture{
