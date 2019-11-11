@@ -164,7 +164,6 @@ TextureBlock::TextureBlock(){
 
 TextureBlock::TextureBlock(const TextureBlock &original){
     free();
-    printf("BEGIN\n");
     renderer = original.renderer;
     rect = original.rect;
 
@@ -205,7 +204,6 @@ void TextureBlock::create_fill_texture(SDL_Color color){
     SDL_Rect temp_rect = {0, 0, rect.w, rect.h};
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, rect.w, rect.h);
 
-    printf("%x, %x, %x, %x\n", color.r, color.g, color.b, color.a);
     SDL_SetRenderTarget(renderer, texture);
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(renderer, &temp_rect);
