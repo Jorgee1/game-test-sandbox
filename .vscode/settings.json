@@ -3,6 +3,7 @@
         "map": "cpp",
         "xstring": "cpp",
         "vector": "cpp",
-        "ctime": "cpp"
+        "ctime": "cpp",
+        "string": "cpp"
     }
 }

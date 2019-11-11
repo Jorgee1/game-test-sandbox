@@ -12,6 +12,7 @@ Menu::Menu(Window &window, controls &control_rules, map<string, SDL_Color> &colo
     this->view_selector = &view_selector;
     colors = &colors_main;
     text.init(this->window->get_render(), "fonts/LiberationMono-Regular.ttf", (*colors)["green"], 18);
+    text.create_texture("ASDf");
 }
 
 void Menu::check_player_actions(){
@@ -26,6 +27,5 @@ void Menu::check_player_actions(){
 }
 
 void Menu::render(){
-    text.render(0, 0, "ASDf");
-    text.render(0, 100, "ASDf2");
+    text.render(0, 0);
 }

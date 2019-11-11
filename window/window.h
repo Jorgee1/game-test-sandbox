@@ -10,6 +10,9 @@ using namespace std;
 
 class Window{
     public:
+        int SCREEN_WIDTH;
+        int SCREEN_HEIGHT;
+        
         Window();
         ~Window();
         
@@ -27,8 +30,6 @@ class Window{
         SDL_Window* get_window();
 
     private:
-        int SCREEN_WIDTH;
-        int SCREEN_HEIGHT;
         SDL_Window* window = NULL;
         SDL_Renderer* render = NULL;
         SDL_Event e;
