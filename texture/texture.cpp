@@ -49,15 +49,27 @@ TextureText::TextureText(){
 }
 
 TextureText::TextureText(const TextureText &original){
-    free();
     renderer = original.renderer;
     rect = original.rect;
+    SDL_Rect temp_rect;
 
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, rect.w, rect.h);
+    if(original.texture!=NULL){
+        free();
+        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, rect.w, rect.h);
+        SDL_SetRenderTarget(renderer, texture);
+        temp_rect = {0, 0, rect.w, rect.h};
+        SDL_RenderCopy(renderer, original.texture, NULL, &temp_rect);
+    }
 
     for(int i=0; i<128; i++){
-        SDL_SetRenderTarget(renderer, texture_chars[i]);
-        SDL_RenderCopy(renderer, original.texture_chars[i], NULL, &rect);
+        if(texture_chars[i] != NULL){
+            SDL_DestroyTexture(texture_chars[i]);
+            SDL_SetRenderTarget(renderer, texture_chars[i]);
+            temp_rect = {0, 0, 0, 0};
+            SDL_QueryTexture(texture_chars[i], NULL, NULL, &temp_rect.w, &temp_rect.h);
+            SDL_RenderCopy(renderer, original.texture_chars[i], NULL, &rect);
+        }
+
     }
 
     SDL_SetRenderTarget(renderer, NULL);
@@ -69,7 +81,6 @@ TextureText::~TextureText(){
         SDL_DestroyTexture(texture_chars[i]);
         texture_chars[i] = NULL;
     }
-
 }
 
 TextureText::TextureText(SDL_Renderer* renderer, string path, SDL_Color color, int size){

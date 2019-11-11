@@ -1,8 +1,11 @@
+#include <cstdlib>
+#include <string>
 #include <map>
+#include <vector>
 
 #include "common.h"
-#include "texture.h"
 #include "window.h"
+#include "texture.h"
 
 #ifndef MENU_H
 #define MENU_H
@@ -11,18 +14,37 @@
 
 class Menu{
     public:
-        TextureText text;
         Window *window;
-        const Uint8* key_state = SDL_GetKeyboardState(NULL);
+        const Uint8* key_state;
         int *view_selector;
-        controls *control_rules;
-        map<string, SDL_Color> *colors;
+        TextureText *text;
 
-        bool enter_lock = true;
+        controls *control_rules;
+        controls_locks *locks;
+
+        int option;
+
+        enum options{
+            OPTION1,
+            OPTION2,
+            OPTION3,
+            TOTAL_OPTION
+        };
 
         Menu();
-        Menu(Window &, controls &, map<string, SDL_Color> &,  int &);
+        Menu(
+            Window &,
+            controls &,
+            controls_locks &,
+            int &,
+            TextureText[]
+        );
 
+        void next_option();
+        void prev_option();
+        void action();
+        void reset_option();
+        
         void check_player_actions();
         void render();
 };

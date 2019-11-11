@@ -57,53 +57,60 @@ class LayerMap{
 
 class OverWorld{
     public:
-    Window *window;
-    TextureText text;
-    SDL_Rect camara;
+        Window *window;
+        TextureText text;
+        SDL_Rect camara;
 
-    controls *control_rules;
-    int *view_selector;
-    
-    vector<Entity*> actors;
-    TextureBlock floor_tiles[4];
+        controls *control_rules;
+        controls_locks *locks;
+        
+        int *view_selector;
+        
+        vector<Entity*> actors;
+        TextureBlock floor_tiles[4];
 
-    int PLAYER;
-    int tile_size = 100;
+        int PLAYER;
+        int tile_size = 100;
 
-    const Uint8* key_state;
-    
-    bool colition = false;
-    bool enter_lock = true;
+        const Uint8* key_state;
+        
+        bool colition = false;
 
-    LayerMap world_map;
+        LayerMap world_map;
 
-    OverWorld();
+        OverWorld();
 
-    OverWorld(Window &, controls &, int &, TextureText &, string mappath);
+        OverWorld(
+            Window &,
+            controls &,
+            controls_locks &,
+            int &,
+            TextureText &,
+            string mappath);
 
-    void add_player(Entity &);
+        void add_player(Entity &);
 
-    void add_entity(Entity &);
+        void add_entity(Entity &);
 
-    void check_player_actions();
+        void check_player_actions();
 
-    void check_entity_colition();
+        void check_entity_colition();
 
-    bool box_colition(SDL_Rect, SDL_Rect);
+        bool box_colition(SDL_Rect, SDL_Rect);
 
-    void update_actors_position();
+        void update_actors_position();
 
-    void update_camara();
+        void update_camara();
 
-    void render_actors();
+        void render_actors();
 
-    void render_floor();
+        void render_floor();
 
-    void render_overlay();
+        void render_overlay();
 
-    void update_word();
+        void update_word();
 
-    void render_world();
+        void render_world();
 };
 
 

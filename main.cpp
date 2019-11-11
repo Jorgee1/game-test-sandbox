@@ -16,57 +16,84 @@
 
 
 int main(int argc, char* args[]){
+    string PATH_FONT = "fonts/LiberationMono-Regular.ttf";
+    string PATH_ICON = "icon.bmp";
+    string PATH_MAP  = "map/test.map";
+    
     int view_selector = 0;
 
-    map<string, SDL_Color> colors = {
-        {"black", {0x00, 0x00, 0x00, 0xFF}},
-        {"red"  , {0xFF, 0x00, 0x00, 0xFF}},
-        {"green", {0x00, 0xFF, 0x00, 0xFF}},
-        {"blue" , {0x00, 0x00, 0xFF, 0xFF}},
-        {"white", {0xFF, 0xFF, 0xFF, 0xFF}},
+    SDL_Color colors[TOTAL_TEXT] = {
+        {0x00, 0x00, 0x00, 0xFF},
+        {0xFF, 0x00, 0x00, 0xFF},
+        {0x00, 0xFF, 0x00, 0xFF},
+        {0x00, 0x00, 0xFF, 0xFF},
+        {0xFF, 0xFF, 0xFF, 0xFF}
     };
 
-    controls game_controls = {
-        SDL_SCANCODE_X,
+    controls controls_rules = {
         SDL_SCANCODE_Z,
+        SDL_SCANCODE_X,
+
         SDL_SCANCODE_RETURN,
+        
         SDL_SCANCODE_UP,
         SDL_SCANCODE_DOWN,
         SDL_SCANCODE_LEFT,
         SDL_SCANCODE_RIGHT
     };
+    controls_locks locks;
 
-    Window window("Test", 800, 600, colors["black"]);
-    window.set_icon("icon.bmp");
+    Window window("Test", 800, 600, colors[TEXT_BLACK]);
+    window.set_icon(PATH_ICON);
 
-    TextureText normal_text(window.get_render(), "fonts/LiberationMono-Regular.ttf", colors["black"], 18);
+    TextureText text_obj[TOTAL_TEXT];
+
+    for(int i=0; i<TOTAL_TEXT; i++){
+        text_obj[i].init(window.get_render(), PATH_FONT, colors[i], 18);
+    }
+
+
 
     Entity player(
         window.get_render(),
-        colors["white"],
+        colors[TEXT_WHITE],
         {10, 10, 100, 100},
         10
     );
 
     Entity dummy(window.get_render(),
-        colors["blue"],
+        colors[TEXT_BLUE],
         {143, 141, 20, 100},
         10
     );
 
     Entity dummy2(
         window.get_render(),
-        colors["red"],
+        colors[TEXT_GREEN],
         {43, 322, 100, 100},
         10
     );
 
-    OverWorld test_room(window, game_controls, view_selector, normal_text, "map/test.map");
+    OverWorld test_room(
+        window,
+        controls_rules,
+        locks,
+        view_selector,
+        text_obj[TEXT_BLACK],
+        PATH_MAP
+    );
+
     test_room.add_player(player);
     test_room.add_entity(dummy);
     test_room.add_entity(dummy2);
 
-    Menu menu_screen(window, game_controls, colors, view_selector);
+    Menu menu_screen(
+        window,
+        controls_rules,
+        locks,
+        view_selector,
+        text_obj
+    );
 
     bool exit = false;
     Uint32 frame_count = 0;
@@ -83,6 +110,10 @@ int main(int argc, char* args[]){
             if (view_selector == 0){
                 test_room.update_word();
                 test_room.render_world();
+
+                if(view_selector==1){
+                    menu_screen.reset_option();
+                }
             }else if (view_selector == 1){
                 menu_screen.check_player_actions();
                 menu_screen.render();
@@ -91,7 +122,7 @@ int main(int argc, char* args[]){
             window.update_screen();
         }
         frame_count++;
-        printf("%ul\n", (long)( frame_count/( (SDL_GetTicks()-start_timer) /1000.f)) );
+        //printf("%ul\n", (long)( frame_count/( (SDL_GetTicks()-start_timer) /1000.f)) );
     }
 
     return 0;

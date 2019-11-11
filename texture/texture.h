@@ -36,11 +36,13 @@ class TextureText: public Texture{
         TextureText(const TextureText &);
         TextureText(SDL_Renderer*, string, SDL_Color, int);
 
+        void init(SDL_Renderer*, string, SDL_Color, int);
+
         void set_text_dimension(string);
         void create_texture(string, bool background_box = false, SDL_Color box_color={0xFF, 0xFF, 0xFF, 0xFF});
 
         void fill_array_null();
-        void init(SDL_Renderer*, string, SDL_Color, int);
+
 
 };
 

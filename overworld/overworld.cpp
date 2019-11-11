@@ -5,20 +5,30 @@
 OverWorld::OverWorld(){
     window = NULL;
     control_rules = NULL;
+    locks = NULL;
     view_selector = NULL;
 
     key_state = SDL_GetKeyboardState(NULL);
     camara = {0, 0, 10, 10};
     PLAYER = 0;
     colition = false;
-    enter_lock = true;
+
 }
 
-OverWorld::OverWorld(Window &window, controls &control_rules, int &view_selector, TextureText &general_text, string map_path){
-    this->window = &window;
+OverWorld::OverWorld(
+        Window &window,
+        controls &control_rules,
+        controls_locks &locks,
+        int &view_selector,
+        TextureText &general_text,
+        string map_path
+    ){
+
+    this->window        = &window;
     this->control_rules = &control_rules;
+    this->locks         = &locks;
     this->view_selector = &view_selector;
-    this->text = general_text;
+    this->text          = general_text;
     
     world_map.init(map_path);
     
@@ -26,9 +36,6 @@ OverWorld::OverWorld(Window &window, controls &control_rules, int &view_selector
     camara = {0, 0, window.SCREEN_WIDTH, window.SCREEN_HEIGHT};
     PLAYER = 0;
     colition = false;
-    enter_lock = true;
-
-
 
     SDL_Color color[] = {
         {0xDB, 0xD0, 0x53, 0xFF},
@@ -66,13 +73,13 @@ void OverWorld::check_player_actions(){
         actors[PLAYER]->move_right();
     }
 
-    if((key_state[control_rules->start_button]) && (!enter_lock)){
+    if((key_state[control_rules->start_button]) && (!locks->start_button)){
         *view_selector = 1;
-        enter_lock = true;
+        locks->start_button = true;
     }
 
     if(!key_state[control_rules->start_button]){
-        enter_lock = false;
+        locks->start_button = false;
     }
 }
 
