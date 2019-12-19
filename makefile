@@ -1,37 +1,28 @@
-CXX = cl
+CXX = g++
+CXXFLAGS = -w -no-pie
+LIBS = -lSDL2 -lSDL2_ttf -lSDL2_image
 
-LINK = linker.exe
-BASE_DIR = $(pwd)
-GLOBAL_LIBRARY_PATH = D:\Programacion\Librerias
+BUILD_FOLDER = build/ubuntu
 
-SDL_PATH = $(GLOBAL_LIBRARY_PATH)\SDL2-2.0.10
-SDL_TTF_PATH = $(GLOBAL_LIBRARY_PATH)\SDL2_ttf-2.0.15
-SDL_IMAGE_PATH = $(GLOBAL_LIBRARY_PATH)\SDL2_image-2.0.5
+SOURCE_PATH = src
+INCLUDE_PATH = include
+TEST_PATH = test
 
-WINDOW_CLASS_PATH  = .\window
-TEXTURE_CLASS_PATH = .\texture
-MENU_CLASS_PATH = .\menu
-OVERWORLD_CLASS_PATH = .\overworld
+FONT_PATH = fonts
+MAP_PATH  = map
 
-INCLUDE_PATHS = /I. /I$(TEXTURE_CLASS_PATH) /I$(OVERWORLD_CLASS_PATH) /I$(WINDOW_CLASS_PATH) /I$(MENU_CLASS_PATH) /I$(SDL_PATH)\include /I$(SDL_TTF_PATH)\include /I$(SDL_IMAGE_PATH)\include
-LIBRARY_PATHS = /LIBPATH:$(SDL_PATH)\lib\x64 /LIBPATH:$(SDL_TTF_PATH)\lib\x64 /LIBPATH:$(SDL_IMAGE_PATH)\lib\x64
+PROGRAM_NAME = $(BUILD_FOLDER)/2D-top-down
 
-SDL_LIB = SDL2main.lib SDL2.lib SDL2_ttf.lib SDL2_image.lib
-
-LINKER_FLAGS = $(SDL_LIB) /link /SUBSYSTEM:CONSOLE $(LIBRARY_PATHS)
-
-BUILD_FOLDER = build
-
-PROGRAM_NAME = $(BUILD_FOLDER)\2D-top-down.exe
-OBJECTS = $(TEXTURE_CLASS_PATH)\texture.cpp $(WINDOW_CLASS_PATH)\window.cpp $(OVERWORLD_CLASS_PATH)\overworld.cpp $(MENU_CLASS_PATH)\menu.cpp
-MAIN_ENTRY = main.cpp
+OBJECTS = $(SOURCE_PATH)/main.cpp $(SOURCE_PATH)/menu.cpp $(SOURCE_PATH)/texture.cpp $(SOURCE_PATH)/window.cpp $(SOURCE_PATH)/overworld.cpp
 
 
+compile: required 
+	$(CXX) $(OBJECTS) -o $(PROGRAM_NAME) -I $(INCLUDE_PATH) $(CXXFLAGS) $(LIBS)
 
+run: compile
+	./$(PROGRAM_NAME)
 
-
-main:
-	$(CXX) /EHsc $(MAIN_ENTRY) $(OBJECTS) /Fe$(PROGRAM_NAME) $(INCLUDE_PATHS) $(LINKER_FLAGS)
-
-test:
-	$(CXX) /EHsc test.cpp $(OBJECTS) /Fe$(BUILD_FOLDER)\test.exe $(INCLUDE_PATHS) $(LINKER_FLAGS)
+required:
+	mkdir -p $(BUILD_FOLDER)
+	cp -r $(FONT_PATH) $(BUILD_FOLDER)
+	cp -r $(MAP_PATH) $(BUILD_FOLDER)

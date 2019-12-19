@@ -1,0 +1,32 @@
+CXX = cl
+
+LINK = linker.exe
+BUILD_FOLDER = build
+
+SOURCE_PATH = .\src
+INCLUDE_PATH = .\include
+
+GLOBAL_LIBRARY_PATH = D:\Programacion\Librerias
+
+SDL_PATH = $(GLOBAL_LIBRARY_PATH)\SDL2-2.0.10
+SDL_TTF_PATH = $(GLOBAL_LIBRARY_PATH)\SDL2_ttf-2.0.15
+SDL_IMAGE_PATH = $(GLOBAL_LIBRARY_PATH)\SDL2_image-2.0.5
+
+INCLUDE_PATHS = /I. /I$(INCLUDE_PATH) /I$(SDL_PATH)\include /I$(SDL_TTF_PATH)\include /I$(SDL_IMAGE_PATH)\include
+LIBRARY_PATHS = /LIBPATH:$(SDL_PATH)\lib\x64 /LIBPATH:$(SDL_TTF_PATH)\lib\x64 /LIBPATH:$(SDL_IMAGE_PATH)\lib\x64
+
+SDL_LIB = SDL2main.lib SDL2.lib SDL2_ttf.lib SDL2_image.lib
+
+
+
+LINKER_FLAGS = $(SDL_LIB) /link /SUBSYSTEM:CONSOLE $(LIBRARY_PATHS)
+
+
+PROGRAM_NAME = $(BUILD_FOLDER)\2D-top-down.exe
+
+OBJECTS = $(SOURCE_PATH)\main.cpp $(SOURCE_PATH)\menu.cpp $(SOURCE_PATH)\texture.cpp $(SOURCE_PATH)\window.cpp $(SOURCE_PATH)\overworld.cpp 
+
+
+main: OBJECTS
+	$(CXX) /EHsc $? /Fe$(PROGRAM_NAME) $(INCLUDE_PATHS) $(LINKER_FLAGS)
+
