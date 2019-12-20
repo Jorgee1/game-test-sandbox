@@ -4,25 +4,42 @@ LIBS = -lSDL2 -lSDL2_ttf -lSDL2_image
 
 BUILD_FOLDER = build/ubuntu
 
-SOURCE_PATH = src
+SOURCE_PATH  = src
 INCLUDE_PATH = include
-TEST_PATH = test
+TEST_PATH    = test
+ASSET_PATH   = assets
 
-FONT_PATH = fonts
-MAP_PATH  = map
+PROGRAM_NAME = 2D-top-down.app
+TEST_NAME    = test.app
 
-PROGRAM_NAME = $(BUILD_FOLDER)/2D-top-down
+ENTRY_FILE   = main.cpp
 
-OBJECTS = $(SOURCE_PATH)/main.cpp $(SOURCE_PATH)/menu.cpp $(SOURCE_PATH)/texture.cpp $(SOURCE_PATH)/window.cpp $(SOURCE_PATH)/overworld.cpp
+OBJECTS  := $(filter-out $(SOURCE_PATH)/$(ENTRY_FILE), $(wildcard $(SOURCE_PATH)/*.cpp)) 
+
+MAIN_OBJ = $(SOURCE_PATH)/$(ENTRY_FILE)
+TEST_OBJ = $(TEST_PATH)/$(ENTRY_FILE)
+
+### Program ##################
 
 
-compile: required 
-	$(CXX) $(OBJECTS) -o $(PROGRAM_NAME) -I $(INCLUDE_PATH) $(CXXFLAGS) $(LIBS)
+compile: required run
+	$(CXX) $(MAIN_OBJ) $(OBJECTS) -o $(BUILD_FOLDER)/$(PROGRAM_NAME) -I $(INCLUDE_PATH) $(CXXFLAGS) $(LIBS)
 
-run: compile
-	./$(PROGRAM_NAME)
+run:
+	./$(BUILD_FOLDER)/$(PROGRAM_NAME)
 
 required:
 	mkdir -p $(BUILD_FOLDER)
-	cp -r $(FONT_PATH) $(BUILD_FOLDER)
-	cp -r $(MAP_PATH) $(BUILD_FOLDER)
+	cp -r $(ASSET_PATH) $(BUILD_FOLDER)
+
+
+### Test Section ############
+
+build_test: run_test
+	$(CXX) $(TEST_OBJ) $(OBJECTS) -o $(TEST_NAME) -I $(INCLUDE_PATH) $(CXXFLAGS) $(LIBS)
+
+run_test:
+	./$(TEST_NAME)
+
+clean_test:
+	rm $(TEST_NAME)

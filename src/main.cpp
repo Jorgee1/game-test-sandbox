@@ -14,9 +14,10 @@
 #include "overworld.h"
 
 int main(int argc, char* args[]){
-    string PATH_FONT = "fonts/LiberationMono-Regular.ttf";
-    string PATH_ICON = "icon.bmp";
-    string PATH_MAP  = "map/test.map";
+    string PATH_FONT = "assets/fonts/LiberationMono-Regular.ttf";
+    string PATH_ICON = "assets/icon.bmp";
+    string PATH_MAP  = "assets/map/test.map";
+    
     int SCREEN_WIDTH  = 800;
     int SCREEN_HEIGHT = 600;
     int view_selector = 0;
@@ -51,8 +52,6 @@ int main(int argc, char* args[]){
     for(int i=0; i<TOTAL_TEXT; i++){
         text_normal_obj[i].init(window.get_render(), PATH_FONT, colors[i], 18);
     }
-
-
 
 
     OverWorld test_room(
