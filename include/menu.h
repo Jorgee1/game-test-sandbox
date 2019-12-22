@@ -1,10 +1,7 @@
-#include <cstdlib>
 #include <string>
-#include <map>
-#include <vector>
 
-#include "common.h"
 #include "window.h"
+#include "action.h"
 #include "texture.h"
 
 #ifndef MENU_H
@@ -12,15 +9,20 @@
 
 class Menu{
     public:
-        Window *window;
-        const Uint8* key_state;
-        int *view_selector;
-        TextureText *text;
 
-        controls *control_rules;
-        controls_locks *locks;
 
         int option;
+        int *view_selector;
+
+        const Uint8* key_state;
+
+        Action* action;
+
+        Window *window;
+
+        TextureText *refernce_color;
+        TextureText *selected_color;
+
 
         enum options{
             OPTION1,
@@ -32,15 +34,15 @@ class Menu{
         Menu();
         Menu(
             Window &,
-            controls &,
-            controls_locks &,
+            Action *,
             int &,
-            TextureText[]
+            TextureText *,
+            TextureText *
         );
 
         void next_option();
         void prev_option();
-        void action();
+        void do_something();
         void reset_option();
 
         void check_player_actions();

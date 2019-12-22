@@ -1,45 +1,14 @@
-#include <cstdlib>
 #include <string>
 #include <vector>
 #include <SDL2/SDL.h>
 
 #include "window.h"
 #include "texture.h"
-#include "common.h"
+#include "entity.h"
+#include "action.h"
 
 #ifndef OVERWORLD_H
 #define OVERWORLD_H
-
-
-class Entity{
-    public:
-        TextureBlock collition_box;
-        int speed;
-        struct{
-            int x;
-            int y;
-        }axis_speed;
-
-        Entity();
-        ~Entity();
-
-
-        Entity(SDL_Renderer*, SDL_Color, SDL_Rect, int);
-
-
-        void render(int, int);
-
-        void update_position();
-
-        void move_up();
-        void move_down();
-        void move_left();
-        void move_right();
-
-        void stop_x();
-        void stop_y();
-};
-
 
 class LayerMap{
     public:
@@ -51,7 +20,7 @@ class LayerMap{
 
         void create_map_array();
 
-        void init(string);
+        void init(std::string);
 };
 
 
@@ -61,12 +30,11 @@ class OverWorld{
         TextureText text;
         SDL_Rect camara;
 
-        controls *control_rules;
-        controls_locks *locks;
+        Action *action;
         
         int *view_selector;
         
-        vector<Entity*> actors;
+        std::vector<Entity*> actors;
         TextureBlock floor_tiles[4];
 
         int PLAYER;
@@ -82,11 +50,10 @@ class OverWorld{
 
         OverWorld(
             Window &,
-            controls &,
-            controls_locks &,
+            Action *,
             int &,
             TextureText &,
-            string mappath,
+            std::string mappath,
             int
         );
 
@@ -98,7 +65,9 @@ class OverWorld{
 
         void check_entity_colition();
 
-        bool box_colition(SDL_Rect, SDL_Rect);
+        bool box_colition(
+            SDL_Rect,
+            SDL_Rect);
 
         void update_actors_position();
 
@@ -114,6 +83,5 @@ class OverWorld{
 
         void render_world();
 };
-
 
 #endif

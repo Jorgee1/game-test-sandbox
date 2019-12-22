@@ -2,28 +2,32 @@
 
 Menu::Menu(){
     key_state = SDL_GetKeyboardState(NULL);
-    window = NULL;
+
     view_selector = NULL;
     option = 0;
-    text = NULL;
 
-    control_rules = NULL;
-    locks = NULL;
+    window = NULL;
+
+    refernce_color = NULL;
+    selected_color = NULL;
+
+    action = NULL;
 }
 
 Menu::Menu(
         Window &window,
-        controls &controls_rules,
-        controls_locks &locks,
+        Action *action,
         int &view_selector,
-        TextureText text_array[]
+        TextureText *refernce_color,
+        TextureText *selected_color
     ){
-    this->window        = &window;
-    this->view_selector = &view_selector;
-    this->control_rules = &controls_rules;
-    this->locks         = &locks;
+    this->action         = action;
+    this->window         = &window;
+    this->view_selector  = &view_selector;
 
-    text = text_array;
+    this->refernce_color = refernce_color;
+    this->selected_color = selected_color;
+
     option = 0;
     
     key_state = SDL_GetKeyboardState(NULL);
@@ -42,7 +46,7 @@ void Menu::prev_option(){
     }
 }
 
-void Menu::action(){
+void Menu::do_something(){
     printf("OPTION %i WAS SELECTED\n", option);
 }
 
@@ -51,65 +55,39 @@ void Menu::reset_option(){
 }
 
 void Menu::check_player_actions(){
-    if((key_state[control_rules->start_button]) && (!locks->start_button)){
+    if(action->check_action(action->BUTTON_START)){
         *view_selector = 0;
-        locks->start_button = true;
     }
 
-    if(key_state[control_rules->action_button] && (!locks->action_button)){
-        locks->action_button = true;
-        action();
+    if(action->check_action(action->BUTTON_ACTION)){
+        do_something();
     }
 
-    if(key_state[control_rules->move_left] && (!locks->move_left)){
-        locks->move_left = true;
+    if(action->check_action(action->BUTTON_MOVE_LEFT)){
         prev_option();
     }
-    if(key_state[control_rules->move_right] && (!locks->move_right)){
-        locks->move_right = true;
+
+    if(action->check_action(action->BUTTON_MOVE_RIGHT)){
         next_option();
-    }
-
-
-    if(!key_state[control_rules->start_button]) {
-        locks->start_button = false;
-    }
-    
-    if(!key_state[control_rules->action_button]) {
-        locks->action_button = false;
-    }
-
-    if(!key_state[control_rules->move_left]) {
-        locks->move_left = false;
-    }
-
-    if(!key_state[control_rules->move_right]) {
-        locks->move_right = false;
     }
 }
 
 void Menu::render(){
-    int refernce_color = TEXT_WHITE;
-    int selected_color = TEXT_RED;
-
-    text[refernce_color].create_texture("PAUSE MENU");
-    text[refernce_color].render(0, 0);
+    refernce_color->render(0, 0, "PAUSE MENU");
 
     SDL_Rect temp;
-    string x[] = {"OPCION1", "OPCION2", "OPCION3"};
+    std::string x[] = {"OPCION1", "OPCION2", "OPCION3"};
 
-    int ref_x = 0;
+    int ref_x =   0;
     int ref_y = 100;
-    int temp_selected_color = refernce_color;
 
     for(int i=0; i<TOTAL_OPTION; i++){
         if (option == i){
-            temp_selected_color = selected_color;
+            selected_color->render(ref_x, ref_y, x[i]);
+            ref_x += selected_color->get_text_size(x[i]).w + 10;
         }else{
-            temp_selected_color = refernce_color;
+            refernce_color->render(ref_x, ref_y, x[i]);
+            ref_x += refernce_color->get_text_size(x[i]).w + 10;
         }
-        text[temp_selected_color].create_texture(x[i]);
-        text[temp_selected_color].render(ref_x, ref_y);
-        ref_x += text[temp_selected_color].rect.w + 10;
     }
 }

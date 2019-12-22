@@ -4,8 +4,7 @@
 
 OverWorld::OverWorld(){
     window = NULL;
-    control_rules = NULL;
-    locks = NULL;
+    action = nullptr;
     view_selector = NULL;
 
     key_state = SDL_GetKeyboardState(NULL);
@@ -17,17 +16,15 @@ OverWorld::OverWorld(){
 
 OverWorld::OverWorld(
         Window &window,
-        controls &control_rules,
-        controls_locks &locks,
+        Action *action,
         int &view_selector,
         TextureText &general_text,
-        string map_path,
+        std::string map_path,
         int size
     ){
 
     this->window        = &window;
-    this->control_rules = &control_rules;
-    this->locks         = &locks;
+    this->action        = action;
     this->view_selector = &view_selector;
     this->text          = general_text;
     
@@ -63,62 +60,63 @@ void OverWorld::add_entity(Entity &actor){
 }
 
 void OverWorld::check_player_actions(){
-    if(key_state[control_rules->move_up]){
+
+
+
+    if(action->get_state(action->BUTTON_MOVE_UP)){
         actors[PLAYER]->move_up();
-    }else if(key_state[control_rules->move_down]){
+    }else if(action->get_state(action->BUTTON_MOVE_DOWN)){
         actors[PLAYER]->move_down();
     }
 
-    if(key_state[control_rules->move_left]){
+    if(action->get_state(action->BUTTON_MOVE_LEFT)){
         actors[PLAYER]->move_left();
-    }else if(key_state[control_rules->move_right]){
+    }else if(action->get_state(action->BUTTON_MOVE_RIGHT)){
         actors[PLAYER]->move_right();
     }
 
-    if((key_state[control_rules->start_button]) && (!locks->start_button)){
+    if(action->check_action(action->BUTTON_START)){
         *view_selector = 1;
-        locks->start_button = true;
     }
 
-    if(!key_state[control_rules->start_button]){
-        locks->start_button = false;
-    }
+
 }
 
 void OverWorld::check_entity_colition(){
     SDL_Rect box1 = {
-        actors[PLAYER]->collition_box.rect.x + actors[PLAYER]->axis_speed.x, 
-        actors[PLAYER]->collition_box.rect.y + actors[PLAYER]->axis_speed.y,
-        actors[PLAYER]->collition_box.rect.w,
-        actors[PLAYER]->collition_box.rect.h
+        actors[PLAYER]->collition_box.x + actors[PLAYER]->axis_speed.x, 
+        actors[PLAYER]->collition_box.y + actors[PLAYER]->axis_speed.y,
+        actors[PLAYER]->collition_box.w,
+        actors[PLAYER]->collition_box.h
     };
+
     SDL_Rect box2;
     colition = false;
     for(int i=0; i<actors.size(); i++){
         if(PLAYER != i){
         
-            box2 = actors[i]->collition_box.rect;
+            box2 = actors[i]->collition_box;
 
             if(box_colition(box1, box2)){
 
-                if(box_colition({box1.x, actors[PLAYER]->collition_box.rect.y, box1.w, box1.h}, box2)){
+                if(box_colition({box1.x, actors[PLAYER]->collition_box.y, box1.w, box1.h}, box2)){
                     if(actors[PLAYER]->axis_speed.x > 0){
                         actors[PLAYER]->axis_speed.x = 0;
-                        actors[PLAYER]->collition_box.rect.x = box2.x - actors[PLAYER]->collition_box.rect.w;
+                        actors[PLAYER]->collition_box.x = box2.x - actors[PLAYER]->collition_box.w;
                     }else if(actors[PLAYER]->axis_speed.x < 0){
                         actors[PLAYER]->axis_speed.x = 0;
-                        actors[PLAYER]->collition_box.rect.x = box2.x + box2.w;
+                        actors[PLAYER]->collition_box.x = box2.x + box2.w;
                     }
                     colition = true;
                 }
 
-                if(box_colition({actors[PLAYER]->collition_box.rect.x, box1.y, box1.w, box1.h}, box2)){
+                if(box_colition({actors[PLAYER]->collition_box.x, box1.y, box1.w, box1.h}, box2)){
                     if(actors[PLAYER]->axis_speed.y > 0){
                         actors[PLAYER]->axis_speed.y = 0;
-                        actors[PLAYER]->collition_box.rect.y = box2.y - actors[PLAYER]->collition_box.rect.h;
+                        actors[PLAYER]->collition_box.y = box2.y - actors[PLAYER]->collition_box.h;
                     }else if(actors[PLAYER]->axis_speed.y < 0){
                         actors[PLAYER]->axis_speed.y = 0;
-                        actors[PLAYER]->collition_box.rect.y = box2.y + box2.h;
+                        actors[PLAYER]->collition_box.y = box2.y + box2.h;
                     }
                     colition = true;
                 }
@@ -153,13 +151,13 @@ void OverWorld::check_entity_colition(){
     if (actors[PLAYER]->axis_speed.x < 0){
         if(box1.x <= 0){
             actors[PLAYER]->axis_speed.x = 0;
-            actors[PLAYER]->collition_box.rect.x = 0;
+            actors[PLAYER]->collition_box.x = 0;
             colition = true; 
         }
     }else if (actors[PLAYER]->axis_speed.x > 0){
         if(box1.x + box1.w >= world_map.w*tile_size){
             actors[PLAYER]->axis_speed.x = 0;
-            actors[PLAYER]->collition_box.rect.x = world_map.w*tile_size - box1.w;
+            actors[PLAYER]->collition_box.x = world_map.w*tile_size - box1.w;
             colition = true;
         }
     }
@@ -167,13 +165,13 @@ void OverWorld::check_entity_colition(){
     if (actors[PLAYER]->axis_speed.y < 0){
         if(box1.y <= 0){
             actors[PLAYER]->axis_speed.y = 0;
-            actors[PLAYER]->collition_box.rect.y = 0;
+            actors[PLAYER]->collition_box.y = 0;
             colition = true;
         }
     }else if (actors[PLAYER]->axis_speed.y > 0){
         if(box1.y + box1.h >= world_map.h*tile_size){
             actors[PLAYER]->axis_speed.y = 0;
-            actors[PLAYER]->collition_box.rect.y = world_map.h*tile_size - box1.h;
+            actors[PLAYER]->collition_box.y = world_map.h*tile_size - box1.h;
             colition = true;
         }
     }
@@ -202,13 +200,13 @@ void OverWorld::update_actors_position(){
 }
 
 void OverWorld::update_camara(){
-    camara.x = actors[PLAYER]->collition_box.rect.x - (camara.w/2) + (actors[PLAYER]->collition_box.rect.w/2);
-    camara.y = actors[PLAYER]->collition_box.rect.y - (camara.h/2) + (actors[PLAYER]->collition_box.rect.h/2);
+    camara.x = actors[PLAYER]->collition_box.x - (camara.w/2) + (actors[PLAYER]->collition_box.w/2);
+    camara.y = actors[PLAYER]->collition_box.y - (camara.h/2) + (actors[PLAYER]->collition_box.h/2);
 }
 
 void OverWorld::render_actors(){
     for(int i=0; i<actors.size(); i++){
-        if(box_colition(camara, actors[i]->collition_box.rect)){
+        if(box_colition(camara, actors[i]->collition_box)){
             actors[i]->render(-camara.x, -camara.y);
         }
     }
@@ -230,18 +228,18 @@ void OverWorld::render_floor(){
 }
 
 void OverWorld::render_overlay(){
-    string coordenates = "X:" + to_string(actors[PLAYER]->collition_box.rect.x) + " Y:" + to_string(actors[PLAYER]->collition_box.rect.y);
+    std::string coordenates = "X:" + std::to_string(actors[PLAYER]->collition_box.x) + 
+                             " Y:" + std::to_string(actors[PLAYER]->collition_box.y);
     
     int acc_x = 1;
     int acc_y = 1;
 
-    text.create_texture(coordenates, true);
-    text.render(acc_x, acc_y);
+    text.render(acc_x, acc_y, coordenates, true);
 
-    acc_y += text.rect.h + 1;
+    acc_y += text.get_text_size(coordenates).h + 1;
+
     if(colition){
-        text.create_texture("COLITION", true);
-        text.render(acc_x, acc_y);
+        text.render(acc_x, acc_y, "COLITION", true);
     }
 }
 
@@ -283,7 +281,7 @@ void LayerMap::create_map_array(){
     }
 }
 
-void LayerMap::init(string map_file_path){
+void LayerMap::init(std::string map_file_path){
     FILE *map_file;
     unsigned int temp = 0;
     map_file = fopen(map_file_path.c_str(), "rb");
@@ -324,62 +322,4 @@ void LayerMap::init(string map_file_path){
 
     fclose (map_file);
     map_file = NULL;
-}
-
-
-// Entity class
-
-
-Entity::Entity(){
-    speed = 0;
-    axis_speed.x = 0;
-    axis_speed.y = 0;
-}
-
-Entity::Entity(SDL_Renderer* render, SDL_Color color, SDL_Rect collition_box, int speed){
-    axis_speed.x = 0;
-    axis_speed.y = 0;
-    this->collition_box.init(render, color, collition_box);
-    this->speed = speed;
-}
-
-Entity::~Entity(){
-    speed = 0;
-    axis_speed.x = 0;
-    axis_speed.y = 0;
-}
-
-void Entity::render(int offset_x, int offset_y){
-    collition_box.render(collition_box.rect.x + offset_x, collition_box.rect.y + offset_y);
-}
-
-void Entity::update_position(){
-    collition_box.rect.x += axis_speed.x;
-    collition_box.rect.y += axis_speed.y;
-    stop_x();
-    stop_y(); 
-}
-
-void Entity::move_up(){
-    axis_speed.y = -speed;
-}
-
-void Entity::move_down(){
-    axis_speed.y = +speed;
-}
-
-void Entity::move_left(){
-    axis_speed.x = -speed;
-}
-
-void Entity::move_right(){
-    axis_speed.x = +speed;
-}
-
-void Entity::stop_x(){
-    axis_speed.x = 0;
-}
-
-void Entity::stop_y(){
-    axis_speed.y = 0;
 }
