@@ -3,11 +3,10 @@
 // OverWorld class
 
 OverWorld::OverWorld(){
-    window = NULL;
+    window = nullptr;
     action = nullptr;
-    view_selector = NULL;
+    view_selector = nullptr;
 
-    key_state = SDL_GetKeyboardState(NULL);
     camara = {0, 0, 10, 10};
     PLAYER = 0;
     colition = false;
@@ -15,23 +14,22 @@ OverWorld::OverWorld(){
 }
 
 OverWorld::OverWorld(
-        Window &window,
-        Action *action,
-        int &view_selector,
-        TextureText &general_text,
+        Window* window,
+        Action* action,
+        TextureText* general_text,
         std::string map_path,
+        int *view_selector,
         int size
     ){
 
-    this->window        = &window;
+    this->window        = window;
     this->action        = action;
-    this->view_selector = &view_selector;
+    this->view_selector = view_selector;
     this->text          = general_text;
     
     world_map.init(map_path);
     
-    key_state = SDL_GetKeyboardState(NULL);
-    camara = {0, 0, window.SCREEN_WIDTH, window.SCREEN_HEIGHT};
+    camara = {0, 0, this->window->SCREEN_WIDTH, this->window->SCREEN_HEIGHT};
     tile_size = size;
     PLAYER = 0;
     colition = false;
@@ -49,6 +47,7 @@ OverWorld::OverWorld(
 
 }
 
+
 void OverWorld::add_player(Entity &actor){
     PLAYER = actors.size();
     actors.push_back(&actor);
@@ -59,10 +58,8 @@ void OverWorld::add_entity(Entity &actor){
     actors.push_back(&actor);
 }
 
+
 void OverWorld::check_player_actions(){
-
-
-
     if(action->get_state(action->BUTTON_MOVE_UP)){
         actors[PLAYER]->move_up();
     }else if(action->get_state(action->BUTTON_MOVE_DOWN)){
@@ -78,8 +75,6 @@ void OverWorld::check_player_actions(){
     if(action->check_action(action->BUTTON_START)){
         *view_selector = 1;
     }
-
-
 }
 
 void OverWorld::check_entity_colition(){
@@ -193,6 +188,8 @@ bool OverWorld::box_colition(SDL_Rect box1, SDL_Rect box2){
     return false;
 }
 
+
+
 void OverWorld::update_actors_position(){
     for(int i=0; i<actors.size(); i++){
         actors[i]->update_position();
@@ -203,6 +200,15 @@ void OverWorld::update_camara(){
     camara.x = actors[PLAYER]->collition_box.x - (camara.w/2) + (actors[PLAYER]->collition_box.w/2);
     camara.y = actors[PLAYER]->collition_box.y - (camara.h/2) + (actors[PLAYER]->collition_box.h/2);
 }
+
+void OverWorld::update_word(){
+    check_player_actions();
+    check_entity_colition();
+    update_actors_position();
+    update_camara();
+}
+
+
 
 void OverWorld::render_actors(){
     for(int i=0; i<actors.size(); i++){
@@ -234,29 +240,29 @@ void OverWorld::render_overlay(){
     int acc_x = 1;
     int acc_y = 1;
 
-    text.render(acc_x, acc_y, coordenates, true);
+    text->render(acc_x, acc_y, coordenates, true);
 
-    acc_y += text.get_text_size(coordenates).h + 1;
+    acc_y += text->get_text_size(coordenates).h + 1;
 
     if(colition){
-        text.render(acc_x, acc_y, "COLITION", true);
+        text->render(acc_x, acc_y, "COLITION", true);
     }
 }
 
-void OverWorld::update_word(){
-    check_player_actions();
-    check_entity_colition();
-    update_actors_position();
-    update_camara();
-}
+
 
 void OverWorld::render_world(){
     render_floor();
     render_actors();
 
-
     render_overlay();
 }
+
+
+
+
+
+
 
 // Map Layer class
 

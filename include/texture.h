@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+
 #include <string>
 
 #ifndef TEXTURE_H
@@ -17,8 +18,15 @@ class Texture{
         
         SDL_Rect get_size();
 
+        void load_bmp(std::string, int scale = 1);
+        void rotate(int);
+
         void free();
         void render(int, int);
+
+    private:
+        int scale;
+        int degree;
 };
 
 class TextureBlock: public Texture{

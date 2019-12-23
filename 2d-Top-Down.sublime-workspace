@@ -59,33 +59,27 @@
 			"file": "src/main.cpp",
 			"settings":
 			{
-				"buffer_size": 3213,
+				"buffer_size": 3167,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "test/main.cpp",
+			"file": "include/overworld.h",
 			"settings":
 			{
-				"buffer_size": 2149,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/menu.cpp",
-			"settings":
-			{
-				"buffer_size": 2528,
+				"buffer_size": 1348,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/action.cpp",
+			"file": "src/overworld.cpp",
 			"settings":
 			{
-				"buffer_size": 1438,
-				"line_ending": "Unix"
+				"buffer_size": 8642,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -168,21 +162,21 @@
 	],
 	"file_history":
 	[
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/action.h",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/texture.h",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/menu.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/overworld.h",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/overworld.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/main.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/menu.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/action.cpp",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/test/main.cpp",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/menu.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/action.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/overworld.cpp-",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/entity.h",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/menu.h",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/overworld.h",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/texture.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/window.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/common.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/Makefile",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/entity.cpp",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/overworld.cpp",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/main.cpp",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/texture.cpp",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/menu.cpp-",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/window.cpp",
@@ -215,6 +209,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"text.",
+			"text",
+			"window",
+			"text",
+			"key_state",
 			"instance",
 			"TEXT_RED",
 			"create_tex",
@@ -254,15 +253,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3213,
+						"buffer_size": 3167,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1519,
-								1519
+								2799,
+								2799
 							]
 						],
 						"settings":
@@ -272,7 +271,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 408.0,
+						"translation.y": 1377.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -280,19 +279,49 @@
 				},
 				{
 					"buffer": 1,
-					"file": "test/main.cpp",
+					"file": "include/overworld.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2149,
+						"buffer_size": 1348,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								822,
+								822
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 612.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/overworld.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8642,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5894,
+								5894
 							]
 						],
 						"settings":
@@ -306,66 +335,6 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/menu.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2528,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								510,
-								510
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/action.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1438,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
 					"type": "text"
 				}
 			]

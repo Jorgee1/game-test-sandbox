@@ -1,8 +1,6 @@
 #include "menu.h"
 
 Menu::Menu(){
-    key_state = SDL_GetKeyboardState(NULL);
-
     view_selector = NULL;
     option = 0;
 
@@ -29,9 +27,6 @@ Menu::Menu(
     this->selected_color = selected_color;
 
     option = 0;
-    
-    key_state = SDL_GetKeyboardState(NULL);
-
 }
 
 void Menu::next_option(){

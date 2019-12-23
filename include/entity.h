@@ -6,12 +6,23 @@
 #define ENTITY_H
 
 class Entity{
-    public:
+    private:
         int speed;
+        int direction;
+        
+    public:
+        enum direction_id{
+            FACE_UP,
+            FACE_DOWN,
+            FACE_LEFT,
+            FACE_RIGHT,
+            FACE_TOTAL
+        };
 
         SDL_Point axis_speed;
         SDL_Rect collition_box;
 
+        Texture sprite;
         TextureBlock bound_box;
 
         Entity();
@@ -30,6 +41,8 @@ class Entity{
 
         void update_position();
 
+        void load_sprite(std::string, int scale = 1);
+
         void move_up();
         void move_down();
         void move_left();
@@ -37,6 +50,9 @@ class Entity{
 
         void stop_x();
         void stop_y();
+
+        int get_direction();
+        void set_direction(int);
 };
 
 #endif

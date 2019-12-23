@@ -14,15 +14,12 @@ class Menu{
         int option;
         int *view_selector;
 
-        const Uint8* key_state;
-
         Action* action;
 
         Window *window;
 
         TextureText *refernce_color;
         TextureText *selected_color;
-
 
         enum options{
             OPTION1,

@@ -1,8 +1,10 @@
 #include "texture.h"
 
 Texture::Texture(){
-    texture = NULL;
-    renderer = NULL;
+    texture  = nullptr;
+    renderer = nullptr;
+    scale    =       1;
+    degree   =       0;
 }
 
 Texture::~Texture(){
@@ -10,14 +12,17 @@ Texture::~Texture(){
 }
 
 Texture::Texture(SDL_Renderer* renderer){
-    texture = NULL;
+    texture = nullptr;
+    scale   =       1;
+    degree  =       0;
+
     this->renderer = renderer;
 }
 
 void Texture::free(){
-    if(texture!=NULL){
+    if(texture!=nullptr){
         SDL_DestroyTexture(texture);
-        texture=NULL;
+        texture=nullptr;
     }
 }
 
@@ -27,11 +32,28 @@ SDL_Rect Texture::get_size(){
     return dimensions;
 }
 
+void Texture::load_bmp(std::string PATH, int scale){
+    SDL_Surface* surface = SDL_LoadBMP(PATH.c_str());
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    surface = nullptr;
+    this->scale = scale;
+}
+
+void Texture::rotate(int degree){
+    if ((degree >= 0) && (degree <= 360)){
+        this->degree = degree;   
+    }
+}
+
 void Texture::render(int x, int y){
     SDL_Rect temp_rect = get_size();
     temp_rect.x = x;
     temp_rect.y = y;
-    SDL_RenderCopy(renderer, texture, NULL, &temp_rect);
+    temp_rect.h = temp_rect.h*scale;
+    temp_rect.w = temp_rect.w*scale;
+
+    SDL_RenderCopyEx(renderer, texture, NULL, &temp_rect, degree, NULL, SDL_FLIP_NONE);
 }
 
 

@@ -14,11 +14,14 @@
 
 
 int main(int argc, char* args[]){
+    std::string PATH_ASSETS = "asset/";
 
-    std::string PATH_FONT = "asset/font/LiberationMono-Regular.ttf";
-    std::string PATH_ICON = "asset/icon.bmp";
-    std::string PATH_MAP  = "asset/map/test.map";
-    
+    std::string PATH_FONT = PATH_ASSETS + "font/LiberationMono-Regular.ttf";
+    std::string PATH_MAP  = PATH_ASSETS + "map/test.map";
+    std::string PATH_ICON = PATH_ASSETS + "icon.bmp";
+
+    std::string IMG_MAIN_CHAR = PATH_ASSETS + "image/main.bmp";
+
     int SCREEN_WIDTH  = 800;
     int SCREEN_HEIGHT = 600;
     int TILE_SIZE     = 100;
@@ -55,14 +58,16 @@ int main(int argc, char* args[]){
     TextureText text_green(window.get_render(), PATH_FONT, COLOR_GREEN, TEXT_SIZE);
     TextureText text_blue (window.get_render(), PATH_FONT, COLOR_BLUE , TEXT_SIZE);
     TextureText text_white(window.get_render(), PATH_FONT, COLOR_WHITE, TEXT_SIZE);
-
     
+    Texture texture_main_char(window.get_render());
+    texture_main_char.load_bmp(IMG_MAIN_CHAR);
+
     OverWorld test_room(
-        window,
+        &window,
         action,
-        view_selector,
-        text_black,
+        &text_black,
         PATH_MAP,
+        &view_selector,
         TILE_SIZE
     );
 
@@ -72,6 +77,8 @@ int main(int argc, char* args[]){
         {10, 10, TILE_SIZE, TILE_SIZE},
         10
     );
+    player.load_sprite(IMG_MAIN_CHAR, 10);
+
 
     Entity dummy(window.get_render(),
         COLOR_BLUE,
