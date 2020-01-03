@@ -93,7 +93,7 @@ int Entity::get_direction(){
 }
 
 void Entity::set_direction(int new_direction){
-    if ((direction>=FACE_UP) and (direction<=FACE_TOTAL)){
+    if ((direction>=FACE_UP) && (direction<=FACE_TOTAL)){
         direction = new_direction;
 
         switch(direction){
