@@ -17,6 +17,7 @@ OverWorld::OverWorld(
         Window* window,
         Action* action,
         TextureText* general_text,
+        SDL_Color dialog_color,
         std::string map_path,
         int *view_selector,
         int size
@@ -27,9 +28,16 @@ OverWorld::OverWorld(
     this->view_selector = view_selector;
     this->text          = general_text;
     
+    dialog_box.init(this->window, text, dialog_color);
+
     world_map.init(map_path);
     
-    camara = {0, 0, this->window->SCREEN_WIDTH, this->window->SCREEN_HEIGHT};
+    camara = {
+        0, 0, 
+        this->window->SCREEN_WIDTH,
+        this->window->SCREEN_HEIGHT
+    };
+
     tile_size = size;
     PLAYER = 0;
     colition = false;
@@ -42,7 +50,11 @@ OverWorld::OverWorld(
     };
 
     for(int i=0; i<4; i++){
-        floor_tiles[i].init(this->window->get_render(), color[i], {0, 0, tile_size, tile_size});
+        floor_tiles[i].init(
+            this->window->get_render(),
+            color[i],
+            {0, 0, tile_size, tile_size}
+        );
     }
 
 }
@@ -70,6 +82,10 @@ void OverWorld::check_player_actions(){
         actors[PLAYER]->move_left();
     }else if(action->get_state(action->BUTTON_MOVE_RIGHT)){
         actors[PLAYER]->move_right();
+    }
+
+    if(action->check_action(action->BUTTON_ACTION)){
+        dialog_box.queue.push_back("asdf");
     }
 
     if(action->check_action(action->BUTTON_START)){
@@ -246,6 +262,10 @@ void OverWorld::render_overlay(){
 
     if(colition){
         text->render(acc_x, acc_y, "COLITION", true);
+    }
+
+    if(dialog_box.queue.size()>0){
+        dialog_box.render();
     }
 }
 

@@ -7,7 +7,7 @@
 #include "texture.h"
 #include "window.h"
 #include "action.h"
-
+#include "dialog_box.h"
 
 int main(int argc, char* args[]){
 

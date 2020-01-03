@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <string>
 #include <vector>
@@ -7,6 +7,7 @@
 #include "texture.h"
 #include "entity.h"
 #include "action.h"
+#include "dialog_box.h"
 
 #ifndef OVERWORLD_H
 #define OVERWORLD_H
@@ -41,13 +42,17 @@ class OverWorld{
         TextureText*  text;
         TextureBlock floor_tiles[4];
 
+        DialogBox dialog_box;
+
         LayerMap world_map;
 
         OverWorld();
 
         OverWorld(
-            Window*,  Action*,
+            Window*,
+            Action*,
             TextureText*,
+            SDL_Color,
             std::string mappath,
             int *, int
         );

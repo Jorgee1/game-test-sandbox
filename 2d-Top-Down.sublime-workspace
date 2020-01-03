@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"dialog",
+				"dialog_box\tDialogBox dialog_box"
+			],
+			[
+				"dialog_",
+				"DIALOG_BOX_H\tDIALOG_BOX_H"
+			],
+			[
+				"test",
+				"test_dialog\tDialogBox test_dialog"
+			],
+			[
+				"COLOR",
+				"COLOR_BLACK\tSDL_Color COLOR_BLACK"
+			],
+			[
+				"text",
+				"text_white\tTextureText text_white"
+			],
+			[
+				"SCr",
+				"SCREEN_HEIGHT\tint SCREEN_HEIGHT"
+			],
+			[
+				"windo",
+				"window_color"
+			],
+			[
+				"in",
+				"inc\t#include \"…\""
+			],
+			[
+				"direc",
+				"direction_id\tdirection_id"
+			],
+			[
+				"re",
+				"render\tvoid render(int, int)"
+			],
+			[
 				"Tex",
 				"TextureBlock\tTextureBlock()"
 			],
@@ -56,30 +96,24 @@
 	"buffers":
 	[
 		{
-			"file": "src/main.cpp",
+			"contents": "#include <SDL2/SDL.h>\n#include <SDL2/SDL_ttf.h>\n\n#include <cstdlib>\n#include <string>\n\n#include \"texture.h\"\n#include \"window.h\"\n#include \"action.h\"\n#include \"dialog_box.h\"\n\nint main(int argc, char* args[]){\n\n    std::string PATH_FONT   = \"asset/font/LiberationMono-Regular.ttf\";\n    std::string PATH_ICON   = \"asset/icon.bmp\";\n    std::string WINDOW_NAME = \"Test\";\n    \n    std::string text = \"Hello\";\n\n    int SCREEN_WIDTH  = 800;\n    int SCREEN_HEIGHT = 600;\n    int TEXT_SIZE     =  40;\n\n    bool exit = false;\n\n    SDL_Color COLOR_BLACK = {0x00, 0x00, 0x00, 0xFF};\n    SDL_Color COLOR_RED   = {0xFF, 0x00, 0x00, 0xFF};\n    SDL_Color COLOR_GREEN = {0x00, 0xFF, 0x00, 0xFF};\n    SDL_Color COLOR_BLUE  = {0x00, 0x00, 0xFF, 0xFF};\n    SDL_Color COLOR_WHITE = {0xFF, 0xFF, 0xFF, 0xFF};\n\n    Window window(WINDOW_NAME, SCREEN_WIDTH, SCREEN_HEIGHT, COLOR_BLACK);\n    window.set_icon(PATH_ICON);\n\n    Action* action = Action::get_instance();\n\n    action->init(\n        SDL_SCANCODE_Z,\n        SDL_SCANCODE_X,\n        SDL_SCANCODE_RETURN,\n        SDL_SCANCODE_UP,\n        SDL_SCANCODE_DOWN,\n        SDL_SCANCODE_LEFT,\n        SDL_SCANCODE_RIGHT\n    );\n\n    TextureText text_black(window.get_render(), PATH_FONT, COLOR_BLACK, TEXT_SIZE);\n    TextureText text_red  (window.get_render(), PATH_FONT, COLOR_RED  , TEXT_SIZE);\n    TextureText text_green(window.get_render(), PATH_FONT, COLOR_GREEN, TEXT_SIZE);\n    TextureText text_blue (window.get_render(), PATH_FONT, COLOR_BLUE , TEXT_SIZE);\n    TextureText text_white(window.get_render(), PATH_FONT, COLOR_WHITE, TEXT_SIZE);\n\n\n    TextureBlock block_red(window.get_render(), COLOR_RED, 100, 100);\n\n    DialogBox()\n\n    while(!exit){\n\n        if(window.check_exit()){\n            exit = true;\n        }else{\n            \n            window.clear_screen();\n\n            text_red.render(0, 0, text);\n            block_red.render(100, 100);\n\n            if(action->check_action(action->BUTTON_MOVE_UP)){\n                printf(\"HYAAAA\\n\");\n            }\n\n            if(action->get_state(action->BUTTON_MOVE_DOWN)){\n                printf(\"DOWWWWN\\n\");\n            }\n            \n            window.update_screen();\n        }\n    }\n\n    return 0;\n}",
+			"file": "test/main.cpp",
+			"file_size": 2170,
+			"file_write_time": 132217869067069122,
 			"settings":
 			{
-				"buffer_size": 3167,
+				"buffer_size": 2187,
 				"encoding": "UTF-8",
-				"line_ending": "Windows"
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "include/overworld.h",
+			"file": "include/dialog_box.h",
 			"settings":
 			{
-				"buffer_size": 1348,
+				"buffer_size": 609,
 				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/overworld.cpp",
-			"settings":
-			{
-				"buffer_size": 8642,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -156,30 +190,36 @@
 	"expanded_folders":
 	[
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/asset",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/asset/image",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/test"
 	],
 	"file_history":
 	[
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/texture.h",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/menu.cpp",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/overworld.h",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/overworld.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/dialog_box.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/main.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/overworld.h",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/dialog_box.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/overworld.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/action.h",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/texture.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/window.h",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/asset/image/npc.bmp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/texture.h",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/window.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/entity.cpp",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/entity.h",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/asset/images",
+		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/menu.cpp",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/menu.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/action.cpp",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/test/main.cpp",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/action.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/overworld.cpp-",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/entity.h",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/window.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/include/common.h",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/Makefile",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/entity.cpp",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/texture.cpp",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/menu.cpp-",
-		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/src/window.cpp",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/2d-Top-Down.sublime-project",
 		"/media/kenshinn/Extra/Programacion/Proyectos/C++/2D-Top-Down/makefile",
 		"/home/kenshinn/.config/sublime-text-3/Packages/User/Package Control.sublime-settings",
@@ -195,7 +235,7 @@
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 26.0
 	},
 	"find_in_files":
 	{
@@ -249,19 +289,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "src/main.cpp",
+					"file": "test/main.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3167,
+						"buffer_size": 2187,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2799,
-								2799
+								1656,
+								1656
 							]
 						],
 						"settings":
@@ -271,57 +311,33 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1377.0,
+						"translation.y": 459.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
-				},
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
 				{
 					"buffer": 1,
-					"file": "include/overworld.h",
+					"file": "include/dialog_box.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1348,
+						"buffer_size": 609,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								822,
-								822
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 612.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/overworld.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8642,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5894,
-								5894
+								574,
+								574
 							]
 						],
 						"settings":
@@ -357,11 +373,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.575700308403,
 			1.0
 		],
 		"rows":

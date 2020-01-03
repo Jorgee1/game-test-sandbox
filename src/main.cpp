@@ -1,5 +1,5 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL.h>
+#include <SDL_ttf.h>
 
 #include <cstdlib>
 #include <string>
@@ -11,7 +11,7 @@
 #include "overworld.h"
 #include "texture.h"
 #include "window.h"
-
+#include "dialog_box.h"
 
 int main(int argc, char* args[]){
     std::string PATH_ASSETS = "asset/";
@@ -21,6 +21,7 @@ int main(int argc, char* args[]){
     std::string PATH_ICON = PATH_ASSETS + "icon.bmp";
 
     std::string IMG_MAIN_CHAR = PATH_ASSETS + "image/main.bmp";
+    std::string IMG_NPC_CHAR  = PATH_ASSETS +  "image/npc.bmp";
 
     int SCREEN_WIDTH  = 800;
     int SCREEN_HEIGHT = 600;
@@ -39,7 +40,12 @@ int main(int argc, char* args[]){
     SDL_Color COLOR_BLUE  = {0x00, 0x00, 0xFF, 0xFF};
     SDL_Color COLOR_WHITE = {0xFF, 0xFF, 0xFF, 0xFF};
 
-    Window window("Test", SCREEN_WIDTH, SCREEN_HEIGHT, COLOR_BLACK);
+    Window window(
+        "Test",
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+        COLOR_BLACK
+    );
     window.set_icon(PATH_ICON);
 
     Action* action = Action::get_instance();
@@ -66,6 +72,7 @@ int main(int argc, char* args[]){
         &window,
         action,
         &text_black,
+        COLOR_BLACK,
         PATH_MAP,
         &view_selector,
         TILE_SIZE
@@ -80,7 +87,8 @@ int main(int argc, char* args[]){
     player.load_sprite(IMG_MAIN_CHAR, 10);
 
 
-    Entity dummy(window.get_render(),
+    Entity dummy(
+        window.get_render(),
         COLOR_BLUE,
         {143, 141, TILE_SIZE/2, TILE_SIZE},
         10
@@ -92,6 +100,7 @@ int main(int argc, char* args[]){
         {43, 322, TILE_SIZE, TILE_SIZE},
         10
     );
+    dummy2.load_sprite(IMG_NPC_CHAR, 10);
 
     test_room.add_player(player);
     test_room.add_entity(dummy);
@@ -120,6 +129,7 @@ int main(int argc, char* args[]){
                 if(view_selector==1){
                     menu_screen.reset_option();
                 }
+
             }else if (view_selector == 1){
                 menu_screen.check_player_actions();
                 menu_screen.render();

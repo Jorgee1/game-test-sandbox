@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #ifndef ACTION_H
 #define ACTION_H
